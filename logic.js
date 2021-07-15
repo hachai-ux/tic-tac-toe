@@ -1,9 +1,9 @@
 //create gameboard object and make functions private through modules/tuck them away
 const gameBoard = (()=>{
     const _boardContent = [
-        ['x','o','x'],
-        ['o','x','o'],
-        ['x','o','x'],
+        ['','',''],
+        ['','',''],
+        ['','',''],
           
           ];
     //boardContent is a private property
@@ -20,33 +20,6 @@ const playerFactory = (name => {
   });
 
 
-const gameController = (()=>{
-    //some private functions
-    const player1 = playerFactory('Player 1');
-    const player2 = playerFactory('Player 2');
-
-    const roundControl = () => {
-        let playerOneTurn = true;
-        let playerTwoTurn = false;
-     
-
-        if (playerOneTurn === true){
-            displayController.renderContent(player1);
-            playerOneTurn = false;
-            playerTwoTurn = true;
-        }
-
-        else if (playerTwoTurn === true){
-            displayController.renderContent(player2);
-            playerTwoTurn = false;
-            playerOneTurn = true;
-        }
-
-    };
-    return {roundControl};
-  
-  
-  })();
   
 const displayController = (()=>{
     //some private functions and properties
@@ -58,52 +31,69 @@ const displayController = (()=>{
     const player2 = playerFactory('Player 2');
     let playerOneTurn = true;
     let playerTwoTurn = false;
+    let playerOneWins = false;
+    let playerTwoWins = false;
+
+    const _checkWinCondition = () => {
+        //loop over 2-dimensional array and return columns/rows as arrays to check
+        //then add conditions for diagonal
     
-    /*
-    const renderContent = ()=>{
-   
+        const horizontal = board;
+        const vertical = [ 
+            //check columns
+            //could have used .map
+            [board[0][0], board[1][0], board[2][0]],
+            [board[0][1], board[1][1], board[2][1]],
+            [board[0][2], board[1][2], board[2][2]],
+        ];
+        const diagonal = [
+            [board[0][0], board[1][1], board[2][2]],
+            [board[0][2], board[1][1], board[2][0]]
+        ];
 
-            for (var i = 0; i < gameRowZero.length; i++) {
-                gameRowZero[i].textContent = board[0][i];
-         
-            };
+        //combine all arrays so for-loop only needs to be run once
+        const all = [].concat(horizontal).concat(vertical).concat(diagonal);
+        console.log(all);
 
-            for (var i = 0; i < gameRowOne.length; i++) {
-                gameRowOne[i].textContent = board[1][i];
-            
+        for (var i = 0; i < all.length; i++) {
+            if((all[i].every(field => field === 'x')) === true){
+                playerOneWins = true;
+                console.log('player one wins');
+            }
+            else if((all[i].every(field => field === 'o')) === true){
+                playerTwoWins = true;
+                console.log('player two wins');
             };
+        };
 
-            for (var i = 0; i < gameRowTwo.length; i++) {
-                gameRowTwo[i].textContent = board[2][i];
-              
-            };
+
         
-    
     };
-    */
-
-    
 
     const renderContent = () => {
         for (var i = 0; i < gameRowZero.length; i++) {
-    
-            gameRowZero[i].addEventListener('click',(e)=>{
             
+            gameRowZero[i].addEventListener('click',(e)=>{
+                let targetIndex;
+
                 if (playerOneTurn === true){
-                    board[0][i] = 'x';
-                    e.target.textContent = board[0][i];
+                    targetIndex = e.target.getAttribute('data-index');
+                    board[0][targetIndex] = 'x';
+                    e.target.textContent = board[0][targetIndex];
                     playerOneTurn = false;
                     playerTwoTurn = true;
                     
                 }
                 else if(playerTwoTurn === true){
-                    board[0][i] = 'o';
-                    e.target.textContent = board[0][i];
+                    targetIndex = e.target.getAttribute('data-index');
+                    board[0][targetIndex] = 'o';
+                    e.target.textContent = board[0][targetIndex];
                     playerTwoTurn = false;
                     playerOneTurn = true;
                 }
                 e.target.disabled = true;
-                console.log(playerOneTurn);
+                _checkWinCondition();
+    
             });
      
         };
@@ -111,18 +101,23 @@ const displayController = (()=>{
         for (var i = 0; i < gameRowOne.length; i++) {
             gameRowOne[i].addEventListener('click',(e)=>{
                 if (playerOneTurn === true){
-                    board[1][i] = 'x';
-                    e.target.textContent = board[1][i];
+                    targetIndex = e.target.getAttribute('data-index');
+                    board[1][targetIndex] = 'x';
+                    e.target.textContent = board[1][targetIndex];
                     playerOneTurn = false;
                     playerTwoTurn = true;
                 }
                 else if(playerTwoTurn === true){
-                    board[1][i] = 'o';
-                    e.target.textContent = board[1][i];
+                    targetIndex = e.target.getAttribute('data-index');
+                    console.log(targetIndex);
+                    board[1][targetIndex] = 'o';
+                    e.target.textContent = board[1][targetIndex];
                     playerTwoTurn = false;
                     playerOneTurn = true;
                 }
                 e.target.disabled = true;
+                _checkWinCondition();
+    
             });
         
         };
@@ -130,31 +125,37 @@ const displayController = (()=>{
         for (var i = 0; i < gameRowTwo.length; i++) {
             gameRowTwo[i].addEventListener('click',(e)=>{
                 if (playerOneTurn === true){
-                    board[2][i] = 'x';
-                    e.target.textContent = board[2][i];
+                    targetIndex = e.target.getAttribute('data-index');
+                    board[2][targetIndex] = 'x';
+                    e.target.textContent = board[2][targetIndex]
                     playerOneTurn = false;
                     playerTwoTurn = true;
                 }
                 else if(playerTwoTurn === true){
-                    board[2][i] = 'o';
-                    e.target.textContent = board[2][i];
+                    targetIndex = e.target.getAttribute('data-index');
+                    board[2][targetIndex] = 'o';
+                    e.target.textContent = board[2][targetIndex];
                     playerTwoTurn = false;
                     playerOneTurn = true;
                 }
                 e.target.disabled = true;
+                _checkWinCondition();
+    
             });
           
         };
-    
+       
 
 
     };
-    console.log(playerOneTurn);
+
+
     return {renderContent};
   })();
   
 
 
 displayController.renderContent();
+
 
 
