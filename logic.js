@@ -22,31 +22,23 @@ const playerFactory = (name => {
 
 const gameLogic = (()=>{
     //some private functions
+    const playerTest = playerFactory('Player 1');
+    displayController.renderContent(playerTest);
+  
   })();
   
-const displayController = (()=>{
-    //some private functions
-    const board = gameBoard.getBoard();
+const displayController = ((player1, player2)=>{
+    //some private functions and properties
+    const board = gameBoard.getBoard(); //board logic
+    const gameRowZero = Array.from(document.querySelectorAll('.row-zero'));
+    const gameRowOne = Array.from(document.querySelectorAll('.row-one'));
+    const gameRowTwo = Array.from(document.querySelectorAll('.row-two'));
+    //const player1 = playerFactory('Player 1');
+    //const player2 = playerFactory('Player 2');
     
+    /*
     const renderContent = ()=>{
-        //create arrays for each row
-        const gameRowZero = Array.from(document.querySelectorAll('.row-zero'));
-        const gameRowOne = Array.from(document.querySelectorAll('.row-one'));
-        const gameRowTwo = Array.from(document.querySelectorAll('.row-two'));
-
-        //const gameFields = document.querySelectorAll('.game-rows');
-
-        //map board object to gameFields
-        
-        //loop through elements
-        //turn nodelist into array to get index
-        /*
-        gameFieldsArray = Array.from(gameFields);
-        gameFieldsArray.forEach(field_element =>{
-            index = gameFieldsArray.indexOf(field_element);
-            */
-        
-        //assign contents to each row
+   
 
             for (var i = 0; i < gameRowZero.length; i++) {
                 gameRowZero[i].textContent = board[0][i];
@@ -63,30 +55,68 @@ const displayController = (()=>{
               
             };
         
-        
-        
+    
+    };
+    */
 
-        /*
-        board.forEach(field_row => {
-            field_row.forEach(field_content => {
-                if 
-            field_element.textContent = field_content;
-                console.log(field_element.textContent);
-                });
+    
+
+    const renderContent = (player) => {
+        for (var i = 0; i < gameRowZero.length; i++) {
+    
+            gameRowZero[i].addEventListener('click',(e)=>{
+            
+                if (player.getName() === player1.getName()){
+                    board[0][i] = 'x';
+                    e.target.textContent = board[0][i];
+                }
+                else if(player.getName() === player2.getName()){
+                    board[0][i] = 'o';
+                    e.target.textContent = board[0][i];
+                }
+        
             });
-          };
-          */
-        //assign board content to elements
+     
+        };
+
+        for (var i = 0; i < gameRowOne.length; i++) {
+            gameRowOne[i].addEventListener('click',(e)=>{
+                if (player.getName() === player1.getName()){
+                    board[1][i] = 'x';
+                    e.target.textContent = board[1][i];
+                }
+                else if(player.getName() === player2.getName()){
+                    board[1][i] = 'o';
+                    e.target.textContent = board[1][i];
+                }
+        
+            });
+        
+        };
+
+        for (var i = 0; i < gameRowTwo.length; i++) {
+            gameRowTwo[i].addEventListener('click',(e)=>{
+                if (player.getName() === player1.getName()){
+                    board[2][i] = 'x';
+                    e.target.textContent = board[2][i];
+                }
+                else if(player.getName() === player2.getName()){
+                    board[2][i] = 'o';
+                    e.target.textContent = board[2][i];
+                }
+        
+            });
+          
+        };
+    
+
+
     };
     return {renderContent};
   })();
   
 
 
-  const player1 = playerFactory('Player 1');
-  const player2 = playerFactory('Player 2');
-
-  displayController.renderContent();
 
 
 
