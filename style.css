@@ -21,3 +21,7 @@
     text-align: center;
     width: 34px;
 }
+
+button:disabled {
+  color: #000000;
+}

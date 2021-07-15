@@ -20,21 +20,44 @@ const playerFactory = (name => {
   });
 
 
-const gameLogic = (()=>{
+const gameController = (()=>{
     //some private functions
-    const playerTest = playerFactory('Player 1');
-    displayController.renderContent(playerTest);
+    const player1 = playerFactory('Player 1');
+    const player2 = playerFactory('Player 2');
+
+    const roundControl = () => {
+        let playerOneTurn = true;
+        let playerTwoTurn = false;
+     
+
+        if (playerOneTurn === true){
+            displayController.renderContent(player1);
+            playerOneTurn = false;
+            playerTwoTurn = true;
+        }
+
+        else if (playerTwoTurn === true){
+            displayController.renderContent(player2);
+            playerTwoTurn = false;
+            playerOneTurn = true;
+        }
+
+    };
+    return {roundControl};
+  
   
   })();
   
-const displayController = ((player1, player2)=>{
+const displayController = (()=>{
     //some private functions and properties
     const board = gameBoard.getBoard(); //board logic
     const gameRowZero = Array.from(document.querySelectorAll('.row-zero'));
     const gameRowOne = Array.from(document.querySelectorAll('.row-one'));
     const gameRowTwo = Array.from(document.querySelectorAll('.row-two'));
-    //const player1 = playerFactory('Player 1');
-    //const player2 = playerFactory('Player 2');
+    const player1 = playerFactory('Player 1');
+    const player2 = playerFactory('Player 2');
+    let playerOneTurn = true;
+    let playerTwoTurn = false;
     
     /*
     const renderContent = ()=>{
@@ -61,50 +84,64 @@ const displayController = ((player1, player2)=>{
 
     
 
-    const renderContent = (player) => {
+    const renderContent = () => {
         for (var i = 0; i < gameRowZero.length; i++) {
     
             gameRowZero[i].addEventListener('click',(e)=>{
             
-                if (player.getName() === player1.getName()){
+                if (playerOneTurn === true){
                     board[0][i] = 'x';
                     e.target.textContent = board[0][i];
+                    playerOneTurn = false;
+                    playerTwoTurn = true;
+                    
                 }
-                else if(player.getName() === player2.getName()){
+                else if(playerTwoTurn === true){
                     board[0][i] = 'o';
                     e.target.textContent = board[0][i];
+                    playerTwoTurn = false;
+                    playerOneTurn = true;
                 }
-        
+                e.target.disabled = true;
+                console.log(playerOneTurn);
             });
      
         };
 
         for (var i = 0; i < gameRowOne.length; i++) {
             gameRowOne[i].addEventListener('click',(e)=>{
-                if (player.getName() === player1.getName()){
+                if (playerOneTurn === true){
                     board[1][i] = 'x';
                     e.target.textContent = board[1][i];
+                    playerOneTurn = false;
+                    playerTwoTurn = true;
                 }
-                else if(player.getName() === player2.getName()){
+                else if(playerTwoTurn === true){
                     board[1][i] = 'o';
                     e.target.textContent = board[1][i];
+                    playerTwoTurn = false;
+                    playerOneTurn = true;
                 }
-        
+                e.target.disabled = true;
             });
         
         };
 
         for (var i = 0; i < gameRowTwo.length; i++) {
             gameRowTwo[i].addEventListener('click',(e)=>{
-                if (player.getName() === player1.getName()){
+                if (playerOneTurn === true){
                     board[2][i] = 'x';
                     e.target.textContent = board[2][i];
+                    playerOneTurn = false;
+                    playerTwoTurn = true;
                 }
-                else if(player.getName() === player2.getName()){
+                else if(playerTwoTurn === true){
                     board[2][i] = 'o';
                     e.target.textContent = board[2][i];
+                    playerTwoTurn = false;
+                    playerOneTurn = true;
                 }
-        
+                e.target.disabled = true;
             });
           
         };
@@ -112,11 +149,12 @@ const displayController = ((player1, player2)=>{
 
 
     };
+    console.log(playerOneTurn);
     return {renderContent};
   })();
   
 
 
-
+displayController.renderContent();
 
 
