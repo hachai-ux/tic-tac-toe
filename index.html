@@ -8,6 +8,15 @@
   <body>
     <div class="container">
         <h1>Tic-Tac-Toe</h1>
+        <div id = "player-names">
+            <form id = "player-form" onsubmit= "return false">
+                <label for="player-one">Player 1</label>
+                <input type="text" id="player-one" name="player-one" required><br><br>
+                <label for="player-two">Player 2</label>
+                <input type="text" id="player-two" name="player-two" required><br><br>
+                <input class = "submit-button" id="player-submit" type="submit" value="Start Game">
+              </form>
+        </div>
         <div class="board-row">
             <button data-index="0" class="game-field row-zero"></button>
             <button data-index="1" class="game-field row-zero"></button>

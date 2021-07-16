@@ -2,10 +2,11 @@
 
 }
 
+
 .board-row{
-    display: table;
+    display: none;
   }
-  
+
 
 .game-field{
     background: #fff;
@@ -24,4 +25,12 @@
 
 button:disabled {
   color: #000000;
+}
+
+.submit-button{
+    margin-bottom: 10px;
+}
+
+#restart-button{
+    margin-bottom: 10px;
 }

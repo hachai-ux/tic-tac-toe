@@ -9,9 +9,11 @@ const gameBoard = (()=>{
     //boardContent is a private property
        
     const getBoard = () => _boardContent;
-   
+
+
     return {getBoard};
     //this function makes getBoard public
+    //returns an array as reference type(a copy)
 })();
 
 const playerFactory = (name => {
@@ -23,21 +25,28 @@ const playerFactory = (name => {
   
 const displayController = (()=>{
     //some private functions and properties
-    const board = gameBoard.getBoard(); //board logic
+    let board = gameBoard.getBoard(); //board logic
     const gameRowZero = Array.from(document.querySelectorAll('.row-zero'));
     const gameRowOne = Array.from(document.querySelectorAll('.row-one'));
     const gameRowTwo = Array.from(document.querySelectorAll('.row-two'));
-    const player1 = playerFactory('Player 1');
-    const player2 = playerFactory('Player 2');
     let playerOneTurn = true;
     let playerTwoTurn = false;
     let playerOneWins = false;
     let playerTwoWins = false;
+    let tie = false;
+    let player1;
+    let player2;
+    let containerDiv = document.querySelector('.container');
+    
+   
+
+
 
     const _checkWinCondition = () => {
         //loop over 2-dimensional array and return columns/rows as arrays to check
         //then add conditions for diagonal
     
+
         const horizontal = board;
         const vertical = [ 
             //check columns
@@ -55,22 +64,59 @@ const displayController = (()=>{
         const all = [].concat(horizontal).concat(vertical).concat(diagonal);
         console.log(all);
 
+        const winDisplay = document.createElement('div');
+        winDisplay.setAttribute('id', 'win-display')
+        const gameFields = document.querySelectorAll('.game-field');
+
+        
+        //check win/lose
         for (var i = 0; i < all.length; i++) {
             if((all[i].every(field => field === 'x')) === true){
                 playerOneWins = true;
                 console.log('player one wins');
+                winDisplay.textContent = `Player ${player1.getName()} wins!`
+                containerDiv.appendChild(winDisplay);
+                //disable all game fields
+                console.log(gameFields);
+                for(let field of gameFields){
+                    console.log(field);
+                    field.disabled = true;
+                };
+                
             }
             else if((all[i].every(field => field === 'o')) === true){
                 playerTwoWins = true;
                 console.log('player two wins');
-            };
+                winDisplay.textContent = `Player ${player2.getName()} wins!`
+                console.log(gameFields);
+                containerDiv.appendChild(winDisplay);
+                for(let field of gameFields){
+                    console.log(field);
+                    field.disabled = true;
+                };
+            }
         };
+        //check tie
+        if((board.some(row => row.some(field => field === '') === true) === false) && playerOneWins === false && playerTwoWins === false){
+            tie = true;
+            console.log('tie'); 
+            winDisplay.textContent = `It's a tie!`
+            containerDiv.appendChild(winDisplay);
+        }
 
 
         
     };
 
-    const renderContent = () => {
+    const _renderContent = () => {
+
+        //make board-rows active
+        const boardRows = document.querySelectorAll('.board-row');
+        for (let row of boardRows) {
+            row.style.display = 'table';   
+          }
+       
+        //add listeners to fields  
         for (var i = 0; i < gameRowZero.length; i++) {
             
             gameRowZero[i].addEventListener('click',(e)=>{
@@ -149,13 +195,82 @@ const displayController = (()=>{
 
     };
 
+    const startGame = () => {
+        const playerForm = document.querySelector('#player-form');
+        const submitButton = document.querySelector('#player-submit');
 
-    return {renderContent};
+       
+        playerForm.addEventListener('submit', () => {
+        player1 = playerFactory(playerForm.elements['player-one'].value);
+        player2 = playerFactory(playerForm.elements['player-two'].value);
+
+      
+        
+
+        submitButton.disabled = true;
+        _renderContent();
+        _restartGame();
+        });
+    };
+
+    const _restartGame = () => {
+        const restartButton = document.createElement('button');
+        const parentDiv = document.querySelector('#player-names');
+        console.log(restartButton);
+        restartButton.setAttribute('id', 'restart-button');
+        restartButton.textContent = 'Restart Game';
+        parentDiv.appendChild(restartButton);
+
+       
+    
+        restartButton.addEventListener('click', () => {
+            //board = gameBoard.getBoard(); doesn't work
+            //gameBoard.getBoard() is a reference, so it's the same as board
+            console.log(gameBoard.getBoard());
+             //remove old win displays
+
+            const winDisplay = document.querySelector('#win-display');
+            if (winDisplay !== null){
+                containerDiv.removeChild(winDisplay);
+            };
+
+
+            playerOneTurn = true;
+            playerTwoTurn = false;
+            playerOneWins = false;
+            playerTwoWins = false;
+            tie = false;
+            for (var i = 0; i < gameRowZero.length; i++) {
+                gameRowZero[i].textContent = '';
+                gameRowZero[i].disabled = false;
+                board[0][i] = '';
+            };
+
+            for (var i = 0; i < gameRowOne.length; i++) {
+                gameRowOne[i].textContent = '';
+                gameRowOne[i].disabled = false;
+                board[1][i] = '';
+            };
+
+            for (var i = 0; i < gameRowTwo.length; i++) {
+                gameRowTwo[i].textContent = '';
+                gameRowTwo[i].disabled = false;
+                board[2][i] = '';
+            };
+
+        });
+
+    }
+
+
+
+
+    return {startGame};
   })();
   
 
 
-displayController.renderContent();
+displayController.startGame();
 
 
 
